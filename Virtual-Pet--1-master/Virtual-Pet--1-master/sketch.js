@@ -1,25 +1,30 @@
-var database ;
-var foodS=20,foodStock;
 var dog;
+var time;
+var database;
 var position;
-var feedTheDog,addTheFood ;
+var lastFood;
 var foodObject;
 var TimeforFood;
-var lastFood;
-var time;
+var foodS=20,foodStock;
+var feedTheDog,addTheFood;
+//var gamestate=0, readGame;
+var bedroomImg,gardenImg,washroomImg;
+
 function preload()
 {
   dogimg1 = loadImage("images/dogImg.png")
   dogimg2 = loadImage("images/dogImg1.png")
   MilkImage=loadImage('images/Milk.png');
-	//load images here
+  //bedroomImg=loadImage("images/Bed Room.png");
+ // gardenImg=loadImage("images/Garden.png");
+ // washroomImg=loadImage("images/Wash Room.png");
 }
 
 function setup() {
+
   createCanvas(800, 500);
   database = firebase.database();
-  
-  console.log(database);
+
   foodObject=new Food()
   dog = createSprite(550,250,10,10);
   dog.addImage(dogimg1)
@@ -28,17 +33,17 @@ function setup() {
   foodStock = database.ref('Food')
   foodStock.on("value",readStock);
 
-  lastFood = database.ref('FeedTime')
+  lastFood = database.ref('TimeforFood')
   lastFood.on("value",readTime)
 
   var dog1 = database.ref('Food');
   dog1.on("value", readPosition);
   feedTheDog = createButton("FEED "+name)
   feedTheDog.position(600,100)
-  feedTheDog.mousePressed(FeedDog)
+  feedTheDog.mousePressed(FeedDog);
   addTheFood = createButton("ADD FOOD")
   addTheFood.position(500,100)
-  addTheFood.mousePressed(AddFood)
+  addTheFood.mousePressed(AddFood);
  
    
 }
@@ -75,10 +80,11 @@ function draw() {
    
   fill(255,255,254);
   textSize(15);
-  //console.log(TimeforFood)
-  text("Last Feed: "+timeFed, 600, 115)
+  
+  text("Last Feed: "+TimeforFood, 600, 115)
  drawSprites();
- setToHour()
+ setToHour();
+
  if(time<frameCount-delay){
   dog.addImage(dogimg1) 
  }
@@ -87,13 +93,13 @@ function draw() {
  }
 }
 function setToHour(){
-  timeFed = "Undefined"
+
   if(TimeforFood){
     if(TimeforFood >=12)
-    timeFed = TimeforFood- 12 +"PM"
+    TimeforFood = TimeforFood- 12 +"PM"
    }
    else {
-     timeFed = TimeforFood +"AM"
+     TimeforFood = TimeforFood +"AM"
    }
 }
 
